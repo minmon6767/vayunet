@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VayuNet — hyperlocal air quality network</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">VayuNet</span>
+    <span class="brand-sub">hyperlocal air quality network</span>
+  </div>
+  <div class="status-line" id="statusLine">connecting to backend&hellip;</div>
+</header>
+
+<main class="layout">
+
+  <section class="map-pane">
+    <div id="map"></div>
+    <div class="map-legend">
+      <div><span class="dot dot-clear"></span>steady</div>
+      <div><span class="dot dot-watch"></span>rising</div>
+      <div><span class="dot dot-spike"></span>spike forecast</div>
+    </div>
+  </section>
+
+  <aside class="detail-pane" id="detailPane">
+    <div class="detail-empty" id="detailEmpty">
+      <p>Pick a city marker on the map to see its forecast, likely pollution source, and the alert it would send.</p>
+    </div>
+
+    <div class="detail-content" id="detailContent" hidden>
+      <h2 id="detailCity">—</h2>
+      <p class="detail-zone" id="detailZone">—</p>
+
+      <div class="reading-row">
+        <div class="reading">
+          <span class="reading-label">now</span>
+          <span class="reading-value" id="readingNow">—</span>
+        </div>
+        <div class="reading-arrow" id="readingArrow">→</div>
+        <div class="reading">
+          <span class="reading-label" id="readingLaterLabel">+36h</span>
+          <span class="reading-value" id="readingLater">—</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3>Likely source</h3>
+        <p class="source-tag" id="sourceTag">—</p>
+        <p class="source-reasoning" id="sourceReasoning">—</p>
+      </div>
+
+      <div class="block">
+        <h3>Alert this would send</h3>
+        <div class="lang-toggle">
+          <button data-lang="en" class="lang-btn active">English</button>
+          <button data-lang="hi" class="lang-btn">हिंदी</button>
+        </div>
+        <p class="alert-text" id="alertText">—</p>
+      </div>
+
+      <div class="block">
+        <h3>Gemini briefing</h3>
+        <p class="hint">Sends everything above — the reading, the forecast, the source guess and its reasoning, plus the latest citizen photo for this city if there is one — to Gemini in a single prompt, and asks it to read all of it and give its own take.</p>
+        <button id="briefingButton" class="secondary-btn">Ask Gemini</button>
+        <div class="briefing-result" id="briefingResult" hidden></div>
+      </div>
+
+      <div class="block">
+        <h3>Feed it a live reading</h3>
+        <p class="hint">Push a new PM2.5 number into this city's node and watch the federated forecast react.</p>
+        <div class="sim-row">
+          <input type="number" id="simInput" placeholder="e.g. 180" min="0" max="500" />
+          <button id="simButton">Update</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<section class="photo-pane">
+  <div class="photo-copy">
+    <h2>Citizen photo check</h2>
+    <p>Upload any outdoor photo. VayuNet runs an offline haze-density estimate on it — the same signal that would feed the hotspot map from a real citizen upload.</p>
+  </div>
+  <div class="photo-widget">
+    <label class="photo-city-label" for="photoCitySelect">Attach to a city (optional — feeds the Gemini briefing)</label>
+    <select id="photoCitySelect" class="photo-city-select">
+      <option value="">No city — standalone check</option>
+    </select>
+    <input type="file" id="photoInput" accept="image/*" />
+    <label for="photoInput" class="photo-drop" id="photoDrop">
+      <span id="photoDropLabel">Choose or drop a photo</span>
+    </label>
+    <div class="photo-result" id="photoResult" hidden>
+      <div class="haze-score" id="hazeScore">—</div>
+      <div class="haze-label" id="hazeLabel">—</div>
+      <div class="haze-source" id="hazeSource">—</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>Prototype backend running locally · federated forecasting simulated across five city nodes · haze detection runs fully offline</span>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

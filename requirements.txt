@@ -1,0 +1,10 @@
+Flask==3.1.3
+Werkzeug==3.1.7
+numpy==2.4.4
+Pillow==12.1.1
+
+# Optional: only needed if you set GEMINI_API_KEY in .env.
+# This is Google's current unified SDK. Do NOT install the older
+# "google-generativeai" package -- Google has deprecated and stopped
+# updating it.
+# google-genai==1.60.0

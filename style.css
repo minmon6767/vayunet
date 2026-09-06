@@ -1,0 +1,396 @@
+/*
+  Design direction: this reads like a monitoring-station instrument panel,
+  not a marketing page. Dark charcoal-green base (not near-black) with an
+  ochre/amber accent pulled straight from the subject itself -- that's the
+  actual color of haze and smog, not a decorative choice bolted on.
+  Data readouts use a monospace face; everything else uses a humanist sans,
+  so numbers always read as "measurements" at a glance.
+*/
+
+:root {
+  --bg: #161d1a;
+  --bg-raised: #1d2622;
+  --bg-panel: #212b26;
+  --line: #33403a;
+  --text: #eef1ee;
+  --text-dim: #9fada6;
+  --ochre: #d9a441;
+  --ochre-dim: #8a6c30;
+  --teal: #4fb6a6;
+  --red: #d1584a;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-mark {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.brand-sub {
+  margin-left: 10px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.status-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  height: calc(100vh - 210px);
+  min-height: 480px;
+}
+
+.map-pane {
+  position: relative;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  background: var(--bg-raised);
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 500;
+  background: rgba(22, 29, 26, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 14px;
+}
+
+.dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.dot-clear { background: var(--teal); }
+.dot-watch { background: var(--ochre); }
+.dot-spike { background: var(--red); }
+
+.detail-pane {
+  border-left: 1px solid var(--line);
+  background: var(--bg-panel);
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.detail-empty p {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.detail-content h2 {
+  margin: 0 0 2px 0;
+  font-size: 22px;
+}
+
+.detail-zone {
+  margin: 0 0 20px 0;
+  color: var(--text-dim);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.reading-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reading-label {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.reading-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.reading-arrow {
+  color: var(--ochre);
+  font-size: 18px;
+}
+
+.block {
+  margin-bottom: 22px;
+}
+
+.block h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-dim);
+}
+
+.source-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-raised);
+  border: 1px solid var(--ochre-dim);
+  color: var(--ochre);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin: 0 0 8px 0;
+  text-transform: capitalize;
+}
+
+.source-reasoning {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.lang-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.lang-btn {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.lang-btn.active {
+  color: var(--text);
+  border-color: var(--ochre-dim);
+}
+
+.alert-text {
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 0;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+}
+
+.sim-row {
+  display: flex;
+  gap: 8px;
+}
+
+.sim-row input {
+  flex: 1;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+}
+
+.sim-row button, #simButton {
+  background: var(--ochre);
+  color: #1b1512;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--ochre-dim);
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.secondary-btn:hover {
+  border-color: var(--ochre);
+}
+
+.secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.briefing-result {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  white-space: pre-wrap;
+}
+
+.photo-city-label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.photo-city-select {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 5px;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.photo-pane {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.photo-copy h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.photo-copy p {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 48ch;
+}
+
+.photo-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#photoInput {
+  display: none;
+}
+
+.photo-drop {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.photo-drop:hover {
+  border-color: var(--ochre-dim);
+}
+
+.photo-result {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+
+.haze-score {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ochre);
+}
+
+.haze-label {
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.haze-source {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+.footer {
+  padding: 14px 28px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* Leaflet marker popups inherit the panel colors instead of Leaflet's default white box */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.leaflet-popup-tip { background: var(--bg-panel); }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; height: auto; }
+  .detail-pane { border-left: none; border-top: 1px solid var(--line); }
+  .photo-pane { grid-template-columns: 1fr; }
+}
