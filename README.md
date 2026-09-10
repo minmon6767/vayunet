@@ -99,8 +99,7 @@ and asks Gemini to read all of it and respond with:
 2. whether it agrees with the rule-based source guess, and why
 3. one concrete recommended action
 
-The API response (`GET /api/gemini-briefing/<city>`) also returns the exact
-`context_sent_to_gemini` dict, so it's never a mystery what Gemini was shown.
+The API response also returns the exact context sentto Gemini dict, so it's never a mystery what Gemini was shown.
 
 ## What you'll see on the dashboard
 
@@ -169,4 +168,4 @@ they work fine in a CI step too if you add one.
 
 ## Team
 
-Built solo by Pranjal Tiwari for a hackathon submission (Indore).
+Built by Team SuperNova for GDG Indore hackathon submission.
